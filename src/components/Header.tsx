@@ -30,7 +30,7 @@ export default function Header() {
         <header className="relative flex justify-between items-center p-4 border-b">
             {/* 좌측 로고 */}
             <h1 className="font-bold text-xl cursor-pointer z-10" onClick={() => router.push("/")}>
-                INSERT
+                INSERT™
             </h1>
             
             {/* 중앙 배치: ❤️머꼴한 망가 (화면 중앙 고정) */}
