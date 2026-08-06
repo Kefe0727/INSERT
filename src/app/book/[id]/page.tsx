@@ -75,7 +75,7 @@ export default async function BookDetailPage({ params }: { params: { id: string 
                     <h1 className="text-3xl font-bold">{book.title}</h1>
                     <p className="text-xl text-gray-400">{book.author}</p>
                     {/* 🆔 작가명 바로 아래에 도서 ID 표시 */}
-                    <p className="text-xs text-gray-400 font-mono mt-1">ID: {book.id}</p>
+                    <p className="text-xs text-gray-400 font-mono mt-1">품번: {book.id}</p>
                 </div>
                 <div>
                     <div className="flex gap-2 flex-wrap">
