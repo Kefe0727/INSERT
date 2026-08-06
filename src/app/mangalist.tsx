@@ -1,9 +1,10 @@
-"use client"; // 이 파일이 클라이언트 컴포넌트라면 필요합니다.
+"use client";
 
 import LikeButton from "@/components/LikeButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image"; // 👈 Next.js 최적화 이미지 컴포넌트 추가
 import { criticalTags, expandedTags } from "@/constants/tags";
 
 export default function BookList({ initialBooks }: { initialBooks: any[] }) {
@@ -14,6 +15,7 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
     const query = searchParams.get("query") || ""; // 현재 검색어 가져오기
     
     const [isExpanded, setIsExpanded] = useState(false);
+
     // 렌더링 함수 (컴포넌트 내부)
     const renderTagButton = (tag: string): React.ReactNode => {
         const isSelected = selectedTags.includes(tag);
@@ -91,7 +93,7 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
                     <div className="flex gap-2">
                         <select name="sort" defaultValue={searchParams.get("sort") || "created_at"} className="border p-2 rounded">
                             <option value="created_at">날짜순</option>
-                            <option value="likes_count">머꼴순</option> // 👈 'likes' 대신 'likes_count'로 변경
+                            <option value="likes_count">머꼴순</option>
                             <option value="views">조회수순</option>
                         </select>
                         <select name="order" defaultValue={searchParams.get("order") || "desc"} className="border p-2 rounded">
@@ -101,7 +103,7 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
                     </div>
                 </form>
 
-                {/* 오른쪽: 초기화 버튼 (mt-4를 추가해 아래로 밀어줌) */}
+                {/* 오른쪽: 초기화 버튼 */}
                 {selectedTags.length > 0 && (
                     <button 
                         onClick={() => {
@@ -116,7 +118,6 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
                 )}
             </div>
                 
-
             <div className="flex flex-col gap-4 mb-8">
                 {isExpanded ? (
                     // 펼쳤을 때: 전체 분류 노출
@@ -149,32 +150,44 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
                     <div key={book.id} className="border p-3 rounded-lg shadow-sm overflow-hidden bg-white">
                         <Link 
                             href={`/book/${book.id}`} 
-                            className="relative block w-full aspect-[7/10] overflow-hidden rounded-md"
+                            className="relative block w-full aspect-[7/10] overflow-hidden rounded-md bg-gray-100"
                         >
-                            {/* 배경 블러 효과 */}
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center blur-lg scale-110 opacity-70"
-                                style={{ backgroundImage: `url(${book.cover_url})` }}
-                            />
+                            {/* 배경 블러 이미지 */}
+                            {book.cover_url && (
+                                <Image
+                                    src={book.cover_url}
+                                    alt=""
+                                    fill
+                                    className="object-cover blur-lg scale-110 opacity-70"
+                                    sizes="100px"
+                                    priority={false}
+                                    unoptimized // 👈 Next.js 서버 최적화를 거치지 않고 직접 로드
+                                />
+                            )}
+
                             {/* 실제 표지 이미지 */}
-                            <img 
-                                src={book.cover_url} 
-                                alt={book.title} 
-                                className="absolute inset-0 w-full h-full object-contain p-1" 
-                            />
+                            {book.cover_url && (
+                                <Image 
+                                    src={book.cover_url} 
+                                    alt={book.title || "표지 이미지"} 
+                                    fill
+                                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                    className="object-contain p-1 relative z-10" 
+                                    unoptimized // 👈 Next.js 서버 최적화를 거치지 않고 직접 로드
+                                />
+                            )}
                         </Link>
 
                         <div className="p-2">
                             <h2 className="text-md font-bold text-black truncate">{book.title}</h2>
                             <p className="text-gray-500 text-xs mt-0.5">{book.author}</p>
                             
-                            {/* 카드 내부 태그 영역: handleTagClick 연결 */}
+                            {/* 카드 내부 태그 영역 */}
                             <div className="flex gap-1 flex-wrap items-center text-[10px] mt-2">
                                 {book.tags?.slice(0, 3).map((tag: string) => (
                                     <button
                                         key={tag}
-                                        onClick={() => handleTagClick(tag)} // 👈 여기서 동일한 함수 호출!
-                                        
+                                        onClick={() => handleTagClick(tag)}
                                         className={`px-1.5 py-0.5 rounded transition-colors ${
                                             selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 
                                             selectedTags.includes(`-${tag}`) ? 'bg-red-500 text-white' : 
@@ -189,7 +202,6 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
                                 )}
                             </div>
 
-                            {/* 기존 코드의 하단 부분 수정 */}
                             <div className="flex justify-between items-center mt-3 text-[10px] text-gray-500">
                                 <div className="flex gap-1">
                                     <LikeButton bookId={book.id} initialLikes={book.likes_count} />

@@ -52,11 +52,11 @@ export default function Header() {
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded-lg transition"
                     >
                         <img 
-                            src={profile?.avatar_url || "/default-avatar.png"} 
+                            src={profile?.avatar_url || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVLB5CniWc2HqriZBha0sfqq3if90V29wY1uj2XaE10z40TOrqdC4_hYKi&s=10"} 
                             className="w-8 h-8 rounded-full bg-gray-200"
                             alt="프로필"
                         />
-                        <span className="text-sm font-medium">{profile?.nickname || "사용자"}</span>
+                        <span className="text-sm font-medium">{profile?.nickname || "이름없는 협객"}</span>
                     </div>
                 ) : (
                     <button onClick={() => router.push("/login")} className="text-sm bg-blue-500 text-white px-3 py-1 rounded">
