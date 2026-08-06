@@ -50,10 +50,10 @@ export default async function BookDetailPage({ params }: { params: { id: string 
                     <div className="relative block w-full aspect-[7/10] overflow-hidden rounded-lg shadow-lg">
                         <div 
                             className="absolute inset-0 bg-cover bg-center blur-lg scale-110 opacity-70"
-                            style={{ backgroundImage: `url(${book.cover_url})` }}
+                            style={{ backgroundImage: `url(${book.cover_url || "https://img1.yna.co.kr/photo/old/data2/orign_img/2002/02/06/2020206_0130_P4.jpg"})` }}
                         />
                         <img 
-                            src={book.cover_url} 
+                            src={book.cover_url || "https://img1.yna.co.kr/photo/old/data2/orign_img/2002/02/06/2020206_0130_P4.jpg"}
                             alt={book.title} 
                             className="absolute inset-0 w-full h-full object-contain p-1 relative z-10" 
                         />
@@ -118,7 +118,7 @@ export default async function BookDetailPage({ params }: { params: { id: string 
                                 >
                                     <div className="relative w-full aspect-[7/10] overflow-hidden rounded bg-gray-100">
                                         <Image
-                                            src={item.cover_url}
+                                            src={item.cover_url || "https://img1.yna.co.kr/photo/old/data2/orign_img/2002/02/06/2020206_0130_P4.jpg"}
                                             alt={item.title}
                                             fill
                                             unoptimized

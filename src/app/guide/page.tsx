@@ -7,6 +7,9 @@ import { parseSummary } from "@/utils/textParser";
 export default function GuidePage() {
     // parseSummary 함수로 테스트할 예시 규칙 설명 텍스트
     const guideText = `
+    본 사이트에서는 __댓글, 줄거리__ 등의 일부 문자열 작성 시 ***INSERT™*** 고유 문법을 사용할 수 있습니다. 
+    모든 문법은 이중, 삼중으로 사용 가능하며, 자세한 규칙은 아래를 참조 바랍니다.
+
     **기본 처리**:
     \`**텍스트**\` : **볼드 처리**할 때 사용합니다.
     \`*텍스트*\` : *기울임꼴* 처리할 때 사용합니다.
@@ -41,11 +44,11 @@ export default function GuidePage() {
         <main className="max-w-3xl mx-auto p-8">
             <h1 className="text-3xl font-bold mb-6">📖 도움말 </h1>
             <section className="border p-6 rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-300 mb-6">
-                <h2 className="text-lg font-bold mb-3">댓글 작성 문법</h2>
+                <h2 className="text-lg font-bold mb-3">INSERT™ 고유 문법</h2>
                 <div className="prose text-m text-gray-800 dark:text-gray-300 whitespace-pre-line leading-relaxed" dangerouslySetInnerHTML={{ __html: parsedGuideText }} >
                 </div>
             </section>
-            <section className="space-y-4 text-sm text-gray-600 dark:text-gray-200">
+            <section className="border p-6 rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-300 mb-6">
                 <h3 className="font-bold text-xl text-gray-800 dark:text-gray-300 text-base">태그 검색 사용법</h3>
                 <ul className="list-disc pl-5 space-y-1">
                     <li><span className="font-semibold text-blue-600">1회 클릭:</span> 해당 태그를 포함하는 망가만 필터링합니다.</li>
