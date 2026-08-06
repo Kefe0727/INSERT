@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image"; // 👈 Next.js 최적화 이미지 컴포넌트 추가
 import LikeButton from "@/components/LikeButton";
 import { criticalTags, expandedTags } from "@/constants/tags";
 
@@ -62,7 +63,6 @@ export default function LikedBookList({ initialBooks }: { initialBooks: any[] })
 
     // --- 좋아요 표시된 목록 안에서만 필터링 (클라이언트 메모리 필터링) ---
     const filteredBooks = initialBooks.filter(book => {
-        // 1. 검색어 필터 (제목, 작가, ID, 태그 내 검색)
         if (query) {
             const q = query.toLowerCase();
             const matchesTitle = book.title?.toLowerCase().includes(q);
@@ -75,21 +75,19 @@ export default function LikedBookList({ initialBooks }: { initialBooks: any[] })
             }
         }
 
-        // 2. 태그 필터 (포함/제외 조건)
         if (selectedTags.length > 0) {
             for (const tag of selectedTags) {
                 if (tag.startsWith('-')) {
                     const actualTag = tag.slice(1);
-                    if (book.tags?.includes(actualTag)) return false; // 제외 태그가 존재하면 제외
+                    if (book.tags?.includes(actualTag)) return false;
                 } else {
-                    if (!book.tags?.includes(tag)) return false; // 포함 태그가 없으면 제외
+                    if (!book.tags?.includes(tag)) return false;
                 }
             }
         }
 
         return true;
     }).sort((a, b) => {
-        // 3. 정렬 필터 (날짜, 좋아요수, 조회수)
         let valA = a[sort];
         let valB = b[sort];
 
@@ -175,17 +173,32 @@ export default function LikedBookList({ initialBooks }: { initialBooks: any[] })
                         <div key={book.id} className="border p-3 rounded-lg shadow-sm overflow-hidden bg-white">
                             <Link 
                                 href={`/book/${book.id}`} 
-                                className="relative block w-full aspect-[7/10] overflow-hidden rounded-md"
+                                className="relative block w-full aspect-[7/10] overflow-hidden rounded-md bg-gray-100"
                             >
-                                <div 
-                                    className="absolute inset-0 bg-cover bg-center blur-lg scale-110 opacity-70"
-                                    style={{ backgroundImage: `url(${book.cover_url})` }}
-                                />
-                                <img 
-                                    src={book.cover_url} 
-                                    alt={book.title} 
-                                    className="absolute inset-0 w-full h-full object-contain p-1" 
-                                />
+                                {/* 배경 블러 이미지 */}
+                                {book.cover_url && (
+                                    <Image
+                                        src={book.cover_url}
+                                        alt=""
+                                        fill
+                                        className="object-cover blur-lg scale-110 opacity-70"
+                                        sizes="100px"
+                                        priority={false}
+                                        unoptimized // 👈 Next.js 서버 최적화를 거치지 않고 직접 로드
+                                    />
+                                )}
+
+                                {/* 실제 표지 이미지 */}
+                                {book.cover_url && (
+                                    <Image 
+                                        src={book.cover_url} 
+                                        alt={book.title || "표지 이미지"} 
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                        className="object-contain p-1 relative z-10" 
+                                        unoptimized // 👈 Next.js 서버 최적화를 거치지 않고 직접 로드
+                                    />
+                                )}
                             </Link>
 
                             <div className="p-2">
