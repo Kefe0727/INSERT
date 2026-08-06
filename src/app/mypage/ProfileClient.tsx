@@ -10,8 +10,7 @@ export default function ProfileClient({ user, profile }: { user: any, profile: a
 
     const handleSignOut = async () => {
         await supabase.auth.signOut();
-        router.push("/");
-        router.refresh();
+        window.location.href = "/";
     };
 
     return (

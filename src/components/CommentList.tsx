@@ -91,7 +91,7 @@ export default function CommentList({ initialComments, currentUserId, bookId }: 
                         <div onClick={() => handleReply(parent.id, parent.content)} className="p-2 border-b cursor-pointer">
                             {renderCommentHeader(parent)}
                             <div 
-                                className="break-words mt-1 text-gray-700 dark:text-gray-300"
+                                className="break-words mt-1"
                                 dangerouslySetInnerHTML={{ __html: summaryHTML(parent.content) }} 
                             />
                             
@@ -116,7 +116,7 @@ export default function CommentList({ initialComments, currentUserId, bookId }: 
                         {isExpanded && childComments.map(child => (
                             <div key={child.id} className="ml-10 border-l-2 pl-4 mt-2 bg-gray-50 dark:bg-gray-800 p-2">
                                 {renderCommentHeader(child)}
-                                <div className="break-words mt-1 text-gray-700 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: summaryHTML(child.content) }} />
+                                <div className="break-words mt-1" dangerouslySetInnerHTML={{ __html: summaryHTML(child.content) }} />
                                 {currentUserId === child.user_uuid && (
                                     <div className="flex justify-end">
                                         <button onClick={(e) => { e.stopPropagation(); handleDelete(child.id); }} className="text-red-500 text-s mr-2">삭제</button>

@@ -20,8 +20,7 @@ export default function LoginPage() {
         if (error) {
             alert(error.message);
         } else {
-            router.push("/"); // 서버 컴포넌트가 세션을 감지할 수 있도록 리프레시 유도
-            router.refresh(); 
+            window.location.href = "/";
         }
     };
     

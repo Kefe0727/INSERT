@@ -16,7 +16,7 @@ export default function ProfileEdit({ user, initialProfile }: { user: any, initi
         if (!file) return;
 
         if (file.size > 2 * 1024 * 1024) {
-            alert("2MB 이하의 이미지만 업로드 가능합니다.");
+            alert("2MB 이하의 이미지만 삽♥입 가능합니다.");
             return;
         }
 
@@ -33,7 +33,7 @@ export default function ProfileEdit({ user, initialProfile }: { user: any, initi
 
             const { data } = supabase.storage.from("profiles").getPublicUrl(filePath);
             setAvatarUrl(data.publicUrl); // 업로드된 URL로 상태 업데이트
-            alert("사진이 업로드되었습니다!");
+            alert("사진이 삽♥입되었습니다!");
         } catch (error) {
             alert("업로드 실패");
         } finally {
@@ -48,21 +48,16 @@ export default function ProfileEdit({ user, initialProfile }: { user: any, initi
             .update({ nickname, avatar_url: avatarUrl })
             .eq("id", user.id);
 
-        if (error) alert("수정 실패: " + error.message);
+        if (error) alert("수♥정 실패: " + error.message);
         else {
-            alert("프로필이 수정되었습니다!");
-            router.refresh();
-            window.location.reload();
-            const timer = setTimeout(() => {
-                router.push("/");
-            }, 1750);
-            
+            alert("프로필이 수♥정되었습니다!");
+            window.location.href = "/";
         }
     };
 
     return (
         <div className="p-4 border rounded shadow-sm">
-            <h2 className="font-bold mb-4">프로필 수정</h2>
+            <h2 className="font-bold mb-4">프로필 수♥정</h2>
             
             {/* 닉네임 입력 */}
             <input 
@@ -78,7 +73,7 @@ export default function ProfileEdit({ user, initialProfile }: { user: any, initi
                 
                 <label className="block w-full p-2 border text-center cursor-pointer hover:bg-gray-50 text-sm">
                     {/* 여기서 "사진 선택하기" 부분을 원하는 텍스트로 바꾸세요 */}
-                    {uploading ? "업로드 중..." : "프로필 사진 변경하기"}
+                    {uploading ? "삽♥입 중..." : "프로필 사진 변경하기"}
                     <input 
                         type="file" 
                         accept="image/*" 
