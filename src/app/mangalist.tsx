@@ -40,23 +40,25 @@ function CoverConfirmModal({ onConfirm }: { onConfirm: (showCover: boolean) => v
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
                 <h2 className="text-lg font-bold mb-3">표지 표시 설정</h2>
                 <p className="text-sm text-gray-600 mb-6">
-                    "협객은 언제나 뒤를 조심해야 하는 법일세. 제 아무리 강하더라도 대응하지 못한다면 그저 무력하게 당할 수밖에 없지."
+                    "협객은 언제나 뒤를 조심해야 하는 법일세."
+                    <br></br>
+                    "제 아무리 강하더라도 뒤에서 흘러들어오는 놈을 받아치지 못한다면 그저 무력하게 당할 수밖에 없지."
+                    <br></br>
                     **메인페이지**의 망가 표지를 렌더링하시겠습니까?
-                    
                 </p>
 
                 <div className="flex gap-3 justify-center">
                     <button
                         onClick={() => handleSelect(true)}
-                        className="flex-1 bg-blue-500 text-white py-2 px-4 rounded font-bold hover:bg-blue-600 transition"
+                        className="flex-1 bg-red-500 text-white py-2 px-4 rounded font-bold hover:bg-red-600 transition"
                     >
-                        표지 보기
+                        표지 보기<br></br>(후방주의)
                     </button>
                     <button
                         onClick={() => handleSelect(false)}
                         className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded font-bold hover:bg-gray-300 transition"
                     >
-                        숨기기
+                        숨기기<br></br>(후방안주의)
                     </button>
                 </div>
             </div>
@@ -174,8 +176,8 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
                     onClick={toggleCover}
                     className={`text-xs px-2 py-1 rounded border font-semibold transition ${
                         showCover 
-                            ? "bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100" 
-                            : "bg-gray-100 border-gray-300 text-gray-500 hover:bg-gray-200"
+                            ? "bg-gray-50 border-gray-200 text-blue-600 hover:bg-gray-100" 
+                            : "bg-red-100 border-red-300 text-white-500 hover:bg-red-200"
                     }`}
                     title="표지 표시/숨김 전환"
                 >
