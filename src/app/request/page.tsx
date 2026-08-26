@@ -209,7 +209,7 @@ export default function BookRequestPage() {
                         value={formData.cover_url}
                         onChange={handleChange}
                         className="w-full p-2 border rounded"
-                        placeholder="히토미에서 표지 이미지 주소 복붙하시면 됩니당"
+                        placeholder="웬만하면 하지 마셈. 이게 보통 10000자가 넘어가서 님 사이트 터짐"
                     />
                 </div>
 

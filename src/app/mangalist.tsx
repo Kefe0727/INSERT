@@ -7,6 +7,65 @@ import Link from "next/link";
 import Image from "next/image"; // 👈 Next.js 최적화 이미지 컴포넌트 추가
 import { criticalTags, expandedTags } from "@/constants/tags";
 
+
+function CoverConfirmModal({ onConfirm }: { onConfirm: (showCover: boolean) => void }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        // sessionStorage에서 이전 선택 기록 확인
+        const savedPreference = sessionStorage.getItem("showCover");
+
+        if (savedPreference === null) {
+            setIsOpen(true); // 방문 시 기록이 없으면 모달 표시
+        } else {
+            onConfirm(savedPreference === "true"); // 저장된 설정 적용
+        }
+
+        const PreferenceChanged = sessionStorage.getItem("showCover");
+        if (PreferenceChanged !== null) {
+            setIsOpen(PreferenceChanged === "true");
+        }
+    }, []);
+
+    const handleSelect = (show: boolean) => {
+        sessionStorage.setItem("showCover", String(show));
+        onConfirm(show);
+        setIsOpen(false);
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
+                <h2 className="text-lg font-bold mb-3">표지 표시 설정</h2>
+                <p className="text-sm text-gray-600 mb-6">
+                    "협객은 언제나 뒤를 조심해야 하는 법일세. 제 아무리 강하더라도 대응하지 못한다면 그저 무력하게 당할 수밖에 없지."
+                    **메인페이지**의 망가 표지를 렌더링하시겠습니까?
+                    
+                </p>
+
+                <div className="flex gap-3 justify-center">
+                    <button
+                        onClick={() => handleSelect(true)}
+                        className="flex-1 bg-blue-500 text-white py-2 px-4 rounded font-bold hover:bg-blue-600 transition"
+                    >
+                        표지 보기
+                    </button>
+                    <button
+                        onClick={() => handleSelect(false)}
+                        className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded font-bold hover:bg-gray-300 transition"
+                    >
+                        숨기기
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+
 export default function BookList({ initialBooks }: { initialBooks: any[] }) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -15,6 +74,8 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
     const query = searchParams.get("query") || ""; // 현재 검색어 가져오기
     
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const [showCover, setShowCover] = useState<boolean>(false);
 
     // 렌더링 함수 (컴포넌트 내부)
     const renderTagButton = (tag: string): React.ReactNode => {
@@ -47,6 +108,22 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
             // 사용자가 다시 타이핑하면 이전 타이머를 취소
             return () => clearTimeout(timer);
         }
+
+
+        const syncCoverState = () => {
+            const savedPreference = sessionStorage.getItem("showCover");
+            if (savedPreference !== null) {
+                setShowCover(savedPreference === "true");
+            }
+        };
+
+        // 헤더 버튼 클릭 시 발생하는 커스텀 이벤트 감지
+        window.addEventListener("coverToggle", syncCoverState);
+
+        return () => {
+            window.removeEventListener("coverToggle", syncCoverState);
+        };
+
     }, [initialBooks, query]);
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -77,10 +154,34 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
         }
         router.push(`/?${params.toString()}`);
     };
+
+    const toggleCover = () => {
+        const nextState = !showCover;
+        setShowCover(nextState);
+        sessionStorage.setItem("showCover", String(nextState));
+
+        // 페이지 간 실시간 상태 동기화를 위해 이벤트 커스텀 전송
+        window.dispatchEvent(new Event("coverToggle"));
+    };
     
     return (
         <main className="max-w-4xl mx-auto p-8 w-full">
-            <h1 className="text-3xl font-bold mb-8">망가 목록</h1>
+            <CoverConfirmModal onConfirm={(isConfirmed) => setShowCover(isConfirmed)} />
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold mb-8">망가 목록</h1>
+
+                <button
+                    onClick={toggleCover}
+                    className={`text-xs px-2 py-1 rounded border font-semibold transition ${
+                        showCover 
+                            ? "bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100" 
+                            : "bg-gray-100 border-gray-300 text-gray-500 hover:bg-gray-200"
+                    }`}
+                    title="표지 표시/숨김 전환"
+                >
+                    {showCover ? "🔞 표지 켜짐" : "🟢 표지 숨김"}
+                </button>
+            </div>
             
             <div className="flex justify-between items-end mb-4">
                 <form onChange={handleFilterChange} className="flex flex-col gap-2">
@@ -152,29 +253,37 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
                             href={`/book/${book.id}`} 
                             className="relative block w-full aspect-[7/10] overflow-hidden rounded-md bg-gray-100"
                         >
-                            {/* 배경 블러 이미지 */}
-                            {book.cover_url && (
-                                <Image
-                                    src={book.cover_url}
-                                    alt=""
-                                    fill
-                                    className="object-cover blur-lg scale-110 opacity-70"
-                                    sizes="100px"
-                                    priority={false}
-                                    unoptimized // 👈 Next.js 서버 최적화를 거치지 않고 직접 로드
-                                />
-                            )}
+                            {showCover ? (
+                                <>
+                                    {/* 배경 블러 이미지 */}
+                                    {book.cover_url && (
+                                        <Image
+                                            src={book.cover_url}
+                                            alt=""
+                                            fill
+                                            className="object-cover blur-lg scale-110 opacity-70"
+                                            sizes="100px"
+                                            priority={false}
+                                            unoptimized
+                                        />
+                                    )}
 
-                            {/* 실제 표지 이미지 */}
-                            {book.cover_url && (
-                                <Image 
-                                    src={book.cover_url} 
-                                    alt={book.title || "표지 이미지"} 
-                                    fill
-                                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                                    className="object-contain p-1 relative z-10" 
-                                    unoptimized // 👈 Next.js 서버 최적화를 거치지 않고 직접 로드
-                                />
+                                    {/* 실제 표지 이미지 */}
+                                    {book.cover_url && (
+                                        <Image 
+                                            src={book.cover_url} 
+                                            alt={book.title || "표지 이미지"} 
+                                            fill
+                                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                            className="object-contain p-1 relative z-10" 
+                                            unoptimized
+                                        />
+                                    )}
+                                </>
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-xs text-gray-400 bg-gray-200 font-medium">
+                                    표지 숨김
+                                </div>
                             )}
                         </Link>
 
