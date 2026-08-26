@@ -44,7 +44,7 @@ export default function GuidePage() {
         <main className="max-w-3xl mx-auto p-8">
             <h1 className="text-3xl font-bold mb-6">📖 도움말 </h1>
             <section className="border p-6 rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-300 mb-6">
-                <h2 className="text-lg font-bold mb-3">INSERT™ 고유 문법</h2>
+                <h2 className="font-bold text-xl text-gray-800 dark:text-gray-300 mb-3">INSERT™ 고유 문법</h2>
                 <div className="prose text-m text-gray-800 dark:text-gray-300 whitespace-pre-line leading-relaxed" dangerouslySetInnerHTML={{ __html: parsedGuideText }} >
                 </div>
             </section>
@@ -55,6 +55,17 @@ export default function GuidePage() {
                     <li><span className="font-semibold text-red-600">2회 클릭:</span> 해당 태그를 제외(-태그)합니다.</li>
                     <li><span className="font-semibold text-gray-500">3회 클릭:</span> 태그 필터를 해제합니다.</li>
                 </ul>
+            </section>
+            <section className="border p-6 rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-300 mb-6">
+                <h3 className="font-bold text-xl text-gray-800 dark:text-gray-300 text-base">[➕ 요청] 기능에 대하여</h3>
+                <div className="prose text-m text-gray-800 dark:text-gray-300 whitespace-pre-line leading-relaxed">
+                    <p>
+                        사용자는 [➕ 요청] 버튼을 통해 특정 망가를 요청할 수 있습니다. <br></br>
+                        신청 시 품번, 제목, 작품 링크는 필수로 입력해야 합니다.<br></br>
+                        '줄거리' 항목 기입 시에 한해 상술한 INSERT™ 문법을 사용해 텍스트를 꾸밀 수 있습니다.<br></br>
+                        요청은 관리자 검토 후 처리됩니다.
+                    </p>
+                </div>
             </section>
         </main>
     );
