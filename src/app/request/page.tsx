@@ -65,7 +65,7 @@ export default function BookRequestPage() {
         const payload = {
             book_id: inputBookId,
             title: formData.title,
-            author: formData.author,
+            author: formData.author ? formData.author.split(",").map((a) => a.trim()).filter(Boolean) : [],
             tags: selectedTags,
             stars: parseInt(formData.stars, 10),
             review: formData.review,

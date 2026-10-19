@@ -291,7 +291,9 @@ export default function BookList({ initialBooks }: { initialBooks: any[] }) {
 
                         <div className="p-2">
                             <h2 className="text-md font-bold text-black truncate">{book.title}</h2>
-                            <p className="text-gray-500 text-xs mt-0.5">{book.author}</p>
+                            <p className="text-gray-500 text-xs mt-0.5 truncate">
+                                {Array.isArray(book.author) ? book.author.join(", ") : book.author || "N/A"}
+                            </p>
                             
                             {/* 카드 내부 태그 영역 */}
                             <div className="flex gap-1 flex-wrap items-center text-[10px] mt-2">

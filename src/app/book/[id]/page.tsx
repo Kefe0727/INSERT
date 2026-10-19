@@ -73,7 +73,11 @@ export default async function BookDetailPage({ params }: { params: { id: string 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col">
                     <h1 className="text-3xl font-bold">{book.title}</h1>
-                    <p className="text-xl text-gray-400">{book.author}</p>
+                    {/* 👈 배열 형태의 author를 안전하게 쉼표(,) 구분자로 출력 */}
+                    <p className="text-xl text-gray-400">
+                        {Array.isArray(book.author) ? book.author.join(", ") : book.author || "N/A"}
+                    </p>
+                    
                     {/* 🆔 작가명 바로 아래에 도서 ID 표시 */}
                     <p className="text-xs text-gray-400 font-mono mt-1">품번: {book.id}</p>
                 </div>
@@ -127,7 +131,7 @@ export default async function BookDetailPage({ params }: { params: { id: string 
                                         />
                                         {isCurrent && (
                                             <span className="absolute top-1 left-1 bg-blue-500 text-white text-[10px] px-1.5 py-0.5 rounded font-bold">
-                                                현재 읽는 중
+                                                현재 열람 중
                                             </span>
                                         )}
                                     </div>

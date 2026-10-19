@@ -90,7 +90,9 @@ export default function AdminRequestsPage() {
         const bookPayload = {
             id: parseInt(req.book_id, 10),
             title: req.title,
-            author: req.author,
+            author: Array.isArray(req.author)
+                ? req.author
+                : req.author ? req.author.split(",").map((a: string) => a.trim()) : [],
             tags: req.tags,
             stars: parseInt(req.stars || 5, 10),
             review: req.review,

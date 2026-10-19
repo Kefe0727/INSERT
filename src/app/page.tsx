@@ -25,7 +25,7 @@ export default async function Home({
 
     let filterString = 
         `title.ilike.%${query}%,` +
-        `author.ilike.%${query}%,` +
+        `author.cs.{${query}},` +
         `summary.ilike.%${query}%,` +
         `tags.cs.{${query}}`;
 
