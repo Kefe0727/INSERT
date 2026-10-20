@@ -9,9 +9,11 @@ export function parseSummary(text: string): string {
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
-        
+
         codeBlocks.push(`<code class="bg-gray-200 text-red-500 px-1 py-0.5 rounded text-xs font-mono">${safeCode}</code>`);
-        return `%%CODE_BLOCK_${codeBlocks.length - 1}%%`;
+        
+        // 💡 줄바꿈 없이 한 줄로 수정
+        return `%%CODE_BLOCK_${codeBlocks.length}%%`;
     });
 
     // 1. 기본 마크다운 스타일 (순서 중요)
